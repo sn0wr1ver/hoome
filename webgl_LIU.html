@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>three.js webgl - cameras</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				color: #808080;
+				font-family:Monospace;
+				font-size:13px;
+				text-align:center;
+
+				background-color: #000;
+				margin: 0px;
+				overflow: hidden;
+			}
+
+			#info {
+				position: absolute;
+				top: 5px; width: 100%;
+				z-index: 100;
+			}
+
+			a {color: #0080ff; }
+			b { color: lightgreen }
+
+		</style>
+	</head>
+	<body>
+		<div id="info"><a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> - cameras<br/>
+		<b>O</b> orthographic <b>P</b> perspective
+		</div>
+
+		<script src="../build/three.js"></script>
+        <script src="../build/OrbitControls.js"></script> 
+
+		<script>
+    //create scene
+    var scene = new THREE.Scene();
+    //create Camera
+    var camera = new THREE.PerspectiveCamera(90 ,window.innerWidth/window.innerHeight, 1, 1000);
+    //create renderer
+    var renderer = new THREE.WebGLRenderer( );
+    //clean renderer color
+    renderer.setClearColor('#FFFFFF');
+    //set renderer size
+    renderer.setSize(window.innerWidth,window.innerHeight);
+    //put rendererDom into body
+    document.body.appendChild(renderer.domElement);
+    //resize self_adjusted enable;
+    window.addEventListener( 'resize',function()
+    {
+        var width =window.innerWidth;
+        var height =window.innerHeight;
+        renderer.setSize(width,height);
+        camera.aspect =width/height;
+        camera.updateProjectionMatrix();
+    });
+    // Add controls for camera with renderer
+    controls = new THREE.OrbitControls( camera, renderer.domElement ); // LL : SCRIPT source missspell src ==>SCR
+   
+    //create geometry
+    var geometry = new THREE.BoxGeometry(10,10,10);
+    var geometry2 = new THREE.CylinderGeometry(10, 5 ,8 ,40 ,20);
+     var planeGeometry = new THREE.PlaneGeometry(14, 14, 4, 4);
+	
+    //create material 
+   /*var cubeMaterials=
+    [
+    new THREE.MeshBasicMaterial({color:0x10FFFF,side:THREE.DoubleSide}),
+    new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load(' img/1.jpg'),side:THREE.DoubleSide}),
+    new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load(' img/5.png'),side:THREE.DoubleSide}),
+    new THREE.MeshBasicMaterial({color:0x10FFFF,side:THREE.DoubleSide}),
+    new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load(' img/5.png'),side:THREE.DoubleSide}),
+    new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load(' img/5.png'),side:THREE.DoubleSide}) 
+    ];
+
+    var material = new THREE.MeshFaceMaterial(cubeMaterials);
+   */
+    var material2 = new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('../img/1.jpg') } );
+    //var material2 = new THREE.MeshPhongMaterial({color: 0x0077ff, transparent: true  , opacity: 1.0});
+     var material3 = new THREE.MeshBasicMaterial({color:0x00ff00});
+    //create cube and cylinder
+    var cube = new THREE.Mesh(geometry,material2);
+     var Cylinder = new THREE.Mesh(geometry2,material3);
+      var plane = new THREE.Mesh(planeGeometry, material2);
+        cube.castShadow = true;
+        Cylinder.castShadow = true;
+        plane.castShadow = true;
+
+	 Cylinder.position.set(-5, 10, 0);
+     cube.position.set(3,0,5);
+    //put cube and cylinder into scene
+    scene.add(cube);
+     scene.add(Cylinder);
+     scene.add(plane);
+
+    var light;
+    function initLight() {
+    scene.add(new THREE.AmbientLight(0x404040));
+    light = new THREE.DirectionalLight(0xffffff);
+    light.position.set(1,4,1);
+    scene.add(light);}
+
+    //Point of view see the cube
+    camera.position.z = 50;
+ 
+    function render(){
+        //add animation
+        requestAnimationFrame(render);
+        //rotating
+        //cube.rotation.x += 0.01;
+        //cube.rotation.y += 0.01;
+      //  Cylinder.rotation.x += 0.02;
+      //  Cylinder.rotation.y += 0.01;
+        //renderer cube
+        renderer.render(scene,camera);
+    }
+    render();
+</script>
+</body>
+</html>
+ 
